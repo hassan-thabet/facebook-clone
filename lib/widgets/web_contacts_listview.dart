@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:test_app/models/user.dart';
+import 'package:test_app/models/user_model.dart';
 
 class ContactsListView extends StatelessWidget {
-  late final List<User> users;
+  late final List<UserModel> users;
   ContactsListView({required this.users});
   @override
   Widget build(BuildContext context) {
@@ -12,14 +12,14 @@ class ContactsListView extends StatelessWidget {
             shrinkWrap: true,
             itemCount: users.length,
             itemBuilder: (context, index) {
-              final User user = users[index];
+              final UserModel user = users[index];
               return Contact(user: user);
             }));
   }
 }
 
 class Contact extends StatelessWidget {
-  late final User user;
+  late final UserModel user;
   Contact({required this.user});
 
   @override
@@ -29,7 +29,7 @@ class Contact extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(4),
           child: InkWell(
-            onTap: (){},
+            onTap: () {},
             child: ListTile(
               title: Text(user.name),
               leading: Stack(
@@ -46,7 +46,7 @@ class Contact extends StatelessWidget {
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      constraints: BoxConstraints(minHeight: 10 , minWidth: 10),
+                      constraints: BoxConstraints(minHeight: 10, minWidth: 10),
                     ),
                   ),
                 ],
@@ -57,7 +57,7 @@ class Contact extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(4),
           child: InkWell(
-            onTap: (){},
+            onTap: () {},
             child: ListTile(
               title: Text(user.name),
               leading: Stack(
@@ -74,7 +74,7 @@ class Contact extends StatelessWidget {
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      constraints: BoxConstraints(minHeight: 10 , minWidth: 10),
+                      constraints: BoxConstraints(minHeight: 10, minWidth: 10),
                     ),
                   ),
                 ],

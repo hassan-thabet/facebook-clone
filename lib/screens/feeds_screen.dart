@@ -41,6 +41,18 @@ class _FeedsScreenState extends State<FeedsScreen> {
   }
 }
 
+List<Tab> myTabs = <Tab>[
+  Tab(
+    icon: Icon(Icons.home),
+  ),
+  Tab(icon: Icon(Icons.group)),
+  Tab(icon: Icon(Icons.ondemand_video)),
+  Tab(icon: Icon(Icons.notifications_none)),
+  Tab(
+    icon: Tab(icon: Icon(Icons.menu)),
+  ),
+];
+
 class FeedScreenMobile extends StatelessWidget {
   final TrackingScrollController scrollController;
   const FeedScreenMobile({
@@ -113,7 +125,7 @@ class FeedScreenMobile extends StatelessWidget {
                                 ),
                               ],
                               bottom: TabBar(
-                                tabs: FeedsBloc.get(context).myTabs,
+                                tabs: myTabs,
                                 indicatorColor: AppColors.App_main_color,
                                 labelColor: AppColors.App_main_color,
                                 unselectedLabelColor: AppColors.icons_color,
@@ -137,19 +149,25 @@ class FeedScreenMobile extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       NewPostSection(),
-                                      SizedBox(height: 10,),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       StoriesSection(
                                           currentUser: currentUser,
                                           stories: stories),
                                       SizedBox(height: 15),
 
-
                                       ListView.separated(
-                                          shrinkWrap: true,
-                                          physics: NeverScrollableScrollPhysics(),
-                                          itemBuilder: (context , index) => PostCard(post: FeedsBloc.get(context).posts[index]),
-                                          separatorBuilder: (context , index) => SizedBox(height: 8),
-                                          itemCount: FeedsBloc.get(context).posts.length,
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context, index) =>
+                                            PostCard(
+                                                post: FeedsBloc.get(context)
+                                                    .posts[index]),
+                                        separatorBuilder: (context, index) =>
+                                            SizedBox(height: 8),
+                                        itemCount:
+                                            FeedsBloc.get(context).posts.length,
                                       ),
                                       // PostCard(FeedsBloc.get(context).posts[index]),
                                     ],
@@ -158,8 +176,7 @@ class FeedScreenMobile extends StatelessWidget {
                               )
                             : SliverToBoxAdapter(),
                       ],
-                    ))
-            ),
+                    ))),
           );
         },
       ),
@@ -179,46 +196,51 @@ class FeedScreeDesktop extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     return BlocProvider(
       create: (BuildContext context) => FeedsBloc()..getPosts(),
-      child: BlocConsumer<FeedsBloc , FeedStates>(
-        listener: (context , state){},
-        builder: (context , state)
-        {
+      child: BlocConsumer<FeedsBloc, FeedStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
               centerTitle: true,
               leading: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4 , horizontal: 8),
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                 child: Image.asset('assets/icons/fb-logo.png'),
               ),
               title: Container(
                 width: size.width * 0.4,
                 child: DefaultTabController(
-                    length: 5,
-                    child: TabBar(
-                      tabs: FeedsBloc.get(context).myTabs,
-                      indicatorColor: AppColors.App_main_color,
-                      labelColor: AppColors.App_main_color,
-                      unselectedLabelColor: AppColors.icons_color,
-                      onTap: (index) {
-                        FeedsBloc.get(context).onTabChange(index);
-                      },
-                    ),
+                  length: 5,
+                  child: TabBar(
+                    tabs: myTabs,
+                    indicatorColor: AppColors.App_main_color,
+                    labelColor: AppColors.App_main_color,
+                    unselectedLabelColor: AppColors.icons_color,
+                    onTap: (index) {
+                      FeedsBloc.get(context).onTabChange(index);
+                    },
+                  ),
                 ),
               ),
-
               actions: [
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: Row(
                     children: [
                       CircleAvatar(
-                        backgroundImage: AssetImage('assets/images/current_user.png'),
+                        backgroundImage:
+                            AssetImage('assets/images/current_user.png'),
                       ),
-                      SizedBox(width: 4,),
-                      Text('Hassan' , style: TextStyle(color: Colors.black),),
-                      SizedBox(width: 10,),
-
+                      SizedBox(
+                        width: 4,
+                      ),
+                      Text(
+                        'Hassan',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
                     ],
                   ),
                 ),
@@ -226,28 +248,40 @@ class FeedScreeDesktop extends StatelessWidget {
                   padding: const EdgeInsets.all(6),
                   child: CircleAvatar(
                     backgroundColor: Colors.grey[200],
-                    child: Icon(Icons.apps_sharp , color: Colors.black87,),
+                    child: Icon(
+                      Icons.apps_sharp,
+                      color: Colors.black87,
+                    ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(6),
                   child: CircleAvatar(
                     backgroundColor: Colors.grey[200],
-                    child: Icon(Icons.chat , color: Colors.black87,),
+                    child: Icon(
+                      Icons.chat,
+                      color: Colors.black87,
+                    ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(6),
                   child: CircleAvatar(
                     backgroundColor: Colors.grey[200],
-                    child: Icon(Icons.notifications_active_sharp , color: Colors.black87,),
+                    child: Icon(
+                      Icons.notifications_active_sharp,
+                      color: Colors.black87,
+                    ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(6),
                   child: CircleAvatar(
                     backgroundColor: Colors.grey[200],
-                    child: Icon(Icons.keyboard_arrow_down_outlined , color: Colors.black87,),
+                    child: Icon(
+                      Icons.keyboard_arrow_down_outlined,
+                      color: Colors.black87,
+                    ),
                   ),
                 ),
               ],
@@ -259,8 +293,7 @@ class FeedScreeDesktop extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: OptionsListView(),
-                    )
-                ),
+                    )),
                 Expanded(
                     flex: 4,
                     child: Container(
@@ -269,7 +302,8 @@ class FeedScreeDesktop extends StatelessWidget {
                           SliverPadding(
                             padding: const EdgeInsets.symmetric(vertical: 15),
                             sliver: SliverToBoxAdapter(
-                              child: StoriesSection(currentUser: currentUser, stories: stories),
+                              child: StoriesSection(
+                                  currentUser: currentUser, stories: stories),
                             ),
                           ),
                           SliverPadding(
@@ -284,28 +318,29 @@ class FeedScreeDesktop extends StatelessWidget {
                               child: ListView.separated(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemBuilder: (context , index) => PostCard(post: FeedsBloc.get(context).posts[index]),
-                                separatorBuilder: (context , index) => SizedBox(height: 8),
+                                itemBuilder: (context, index) => PostCard(
+                                    post: FeedsBloc.get(context).posts[index]),
+                                separatorBuilder: (context, index) =>
+                                    SizedBox(height: 8),
                                 itemCount: FeedsBloc.get(context).posts.length,
                               ),
                             ),
                           ),
                         ],
                       ),
-                    )
-                ),
+                    )),
                 Flexible(
                     flex: 2,
                     child: Align(
                       alignment: Alignment.topRight,
-                      child: ContactsListView(users: users,),
-                    )
-                ),
+                      child: ContactsListView(
+                        users: users,
+                      ),
+                    )),
               ],
             ),
           );
         },
-
       ),
     );
   }

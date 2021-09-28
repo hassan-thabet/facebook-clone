@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:test_app/models/post.dart';
+import 'package:test_app/models/post_model.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class PostCard extends StatelessWidget {
-  final Post? post;
+  final PostModel? post;
   PostCard({this.post});
 
   @override
@@ -60,27 +60,27 @@ class PostCard extends StatelessWidget {
                             fit: BoxFit.fitWidth,
                           )
                         : Container(
-                          height: 200,
-                          width: double.infinity,
-                          child: CarouselSlider(
-                              options: CarouselOptions(
-                                autoPlay: true,
-                                enableInfiniteScroll: true,
-                                autoPlayInterval: Duration(seconds: 2),
-                                enlargeCenterPage: true,
-                              ),
-                              items: <Widget>[
-                                for (var index = 0;
-                                    index < post!.postImage!.length;
-                                    index++)
-                                  Image.network(
-                                    post!.postImage![index],
-                                    height: 200,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
-                              ]),
-                        )
+                            height: 200,
+                            width: double.infinity,
+                            child: CarouselSlider(
+                                options: CarouselOptions(
+                                  autoPlay: true,
+                                  enableInfiniteScroll: true,
+                                  autoPlayInterval: Duration(seconds: 2),
+                                  enlargeCenterPage: true,
+                                ),
+                                items: <Widget>[
+                                  for (var index = 0;
+                                      index < post!.postImage!.length;
+                                      index++)
+                                    Image.network(
+                                      post!.postImage![index],
+                                      height: 200,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
+                                ]),
+                          )
                     : Container(),
                 SizedBox(
                   height: 20,
