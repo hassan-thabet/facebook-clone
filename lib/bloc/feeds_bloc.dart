@@ -7,22 +7,29 @@ import 'feeds_states.dart';
 class FeedsBloc extends Cubit<FeedStates> {
   FeedsBloc() : super(FeedsInitialState());
   static FeedsBloc get(context) => BlocProvider.of(context);
-  List<PostModel> posts = [];
-  int currentTab = 0;
 
+  List<PostModel> posts = [];
+
+  int currentTab = 0;
   void onTabChange(index) {
     currentTab = index;
-    emit((ChangeTabBarIndex()));
+    emit(ChangeTabBarIndex());
+    if (index == 0) {
+      getPosts();
+    }
   }
 
-  void getPosts() {
-    FirebaseFirestore.instance.collection('posts').get().then((value) {
-      value.docs.forEach((element) {
-        posts.add(PostModel.fromJson(element.data()));
+  Future getPosts() async {
+    Future.delayed(Duration(seconds: 2), () {
+      emit((GetPostsLoading()));
+      FirebaseFirestore.instance.collection('posts').get().then((value) {
+        value.docs.forEach((element) {
+          posts.add(PostModel.fromJson(element.data()));
+        });
+        emit((GetPostsDone()));
+      }).catchError((error) {
+        emit((GetPostsError()));
       });
-      emit((GetPostsDone()));
-    }).catchError((error) {
-      emit((GetPostsError()));
     });
   }
 }

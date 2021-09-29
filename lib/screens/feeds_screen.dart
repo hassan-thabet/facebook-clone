@@ -64,121 +64,120 @@ class FeedScreenMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) => FeedsBloc()..getPosts(),
-      child: BlocConsumer<FeedsBloc, FeedStates>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          return Scaffold(
-            body: DefaultTabController(
-                length: 5,
-                initialIndex: 0,
-                child: NestedScrollView(
-                    headerSliverBuilder:
-                        (BuildContext context, bool innerBoxIsScrolled) {
-                      return <Widget>[
-                        SliverOverlapAbsorber(
-                          handle:
-                              NestedScrollView.sliverOverlapAbsorberHandleFor(
-                                  context),
-                          sliver: SliverSafeArea(
-                            top: false,
-                            sliver: SliverAppBar(
-                              backgroundColor: Colors.white,
-                              centerTitle: false,
-                              floating: true,
-                              pinned: true,
-                              snap: false,
-                              primary: true,
-                              forceElevated: innerBoxIsScrolled,
-                              title: Text(
-                                'facebook',
-                                style: TextStyle(
-                                  color: AppColors.App_main_color,
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: -1.2,
-                                ),
-                              ),
-                              actions: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 4, bottom: 4),
-                                  child: CircleAvatar(
-                                      backgroundColor: Colors.grey[300],
-                                      radius: 15,
-                                      child: Image.asset(
-                                        'assets/icons/search.png',
-                                        height: 18,
-                                        width: 18,
-                                      )),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 4, bottom: 4, right: 12, left: 8),
-                                  child: CircleAvatar(
-                                      backgroundColor: Colors.grey[300],
-                                      radius: 15,
-                                      child: Image.asset(
-                                        'assets/icons/messenger.png',
-                                        height: 18,
-                                        width: 18,
-                                      )),
-                                ),
-                              ],
-                              bottom: TabBar(
-                                tabs: myTabs,
-                                indicatorColor: AppColors.App_main_color,
-                                labelColor: AppColors.App_main_color,
-                                unselectedLabelColor: AppColors.icons_color,
-                                onTap: (index) {
-                                  FeedsBloc.get(context).onTabChange(index);
-                                },
+      child: Scaffold(
+        body: DefaultTabController(
+            length: 5,
+            initialIndex: 0,
+            child: NestedScrollView(headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverOverlapAbsorber(
+                  handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                  sliver: SliverSafeArea(
+                    top: false,
+                    sliver: SliverAppBar(
+                      backgroundColor: Colors.white,
+                      centerTitle: false,
+                      floating: true,
+                      pinned: true,
+                      snap: false,
+                      primary: true,
+                      forceElevated: innerBoxIsScrolled,
+                      title: Text(
+                        'facebook',
+                        style: TextStyle(
+                          color: AppColors.App_main_color,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: -1.2,
+                        ),
+                      ),
+                      actions: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4, bottom: 4),
+                          child: CircleAvatar(
+                              backgroundColor: Colors.grey[300],
+                              radius: 15,
+                              child: Image.asset(
+                                'assets/icons/search.png',
+                                height: 18,
+                                width: 18,
+                              )),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 4, bottom: 4, right: 12, left: 8),
+                          child: CircleAvatar(
+                              backgroundColor: Colors.grey[300],
+                              radius: 15,
+                              child: Image.asset(
+                                'assets/icons/messenger.png',
+                                height: 18,
+                                width: 18,
+                              )),
+                        ),
+                      ],
+                      bottom: TabBar(
+                        tabs: myTabs,
+                        indicatorColor: AppColors.App_main_color,
+                        labelColor: AppColors.App_main_color,
+                        unselectedLabelColor: AppColors.icons_color,
+                        onTap: (index) {
+                          context.read<FeedsBloc>().onTabChange(index);
+                        },
+                      ),
+                    ),
+                  ),
+                )
+              ];
+            }, body: BlocBuilder<FeedsBloc, FeedStates>(
+              builder: (context, state) {
+                return CustomScrollView(
+                  slivers: [
+                    (FeedsBloc.get(context).currentTab == 0)
+                        ? SliverToBoxAdapter(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 12),
+                              color: Colors.white,
+                              child: Column(
+                                children: [
+                                  NewPostSection(),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  StoriesSection(
+                                      currentUser: currentUser,
+                                      stories: stories),
+                                  SizedBox(height: 15),
+                                  (state is GetPostsDone)
+                                      ? ListView.separated(
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) =>
+                                              PostCard(
+                                            post: context
+                                                .read<FeedsBloc>()
+                                                .posts[index],
+                                          ),
+                                          separatorBuilder: (context, index) =>
+                                              SizedBox(height: 8),
+                                          itemCount: FeedsBloc.get(context)
+                                              .posts
+                                              .length,
+                                        )
+                                      : CircularProgressIndicator(),
+                                ],
                               ),
                             ),
-                          ),
-                        )
-                      ];
-                    },
-                    body: CustomScrollView(
-                      slivers: [
-                        (FeedsBloc.get(context).currentTab == 0)
-                            ? SliverToBoxAdapter(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 12),
-                                  color: Colors.white,
-                                  child: Column(
-                                    children: [
-                                      NewPostSection(),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      StoriesSection(
-                                          currentUser: currentUser,
-                                          stories: stories),
-                                      SizedBox(height: 15),
-
-                                      ListView.separated(
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) =>
-                                            PostCard(
-                                                post: FeedsBloc.get(context)
-                                                    .posts[index]),
-                                        separatorBuilder: (context, index) =>
-                                            SizedBox(height: 8),
-                                        itemCount:
-                                            FeedsBloc.get(context).posts.length,
-                                      ),
-                                      // PostCard(FeedsBloc.get(context).posts[index]),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            : SliverToBoxAdapter(),
-                      ],
-                    ))),
-          );
-        },
+                          )
+                        : SliverToBoxAdapter(),
+                  ],
+                );
+              },
+            ))),
       ),
     );
   }
@@ -217,7 +216,7 @@ class FeedScreeDesktop extends StatelessWidget {
                     labelColor: AppColors.App_main_color,
                     unselectedLabelColor: AppColors.icons_color,
                     onTap: (index) {
-                      FeedsBloc.get(context).onTabChange(index);
+                      FeedsBloc().onTabChange(index);
                     },
                   ),
                 ),
