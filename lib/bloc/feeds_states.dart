@@ -1,4 +1,3 @@
-import 'package:test_app/bloc/feeds_bloc.dart';
 
 abstract class FeedStates {}
 
