@@ -90,7 +90,7 @@ class FeedsMobileScreen extends StatelessWidget {
                 )
               ];
             }, body:
-                BlocBuilder<FeedsBloc, FeedStates>(builder: (context, state) {
+            BlocBuilder<FeedsBloc, FeedStates>(builder: (context, state) {
               return CustomScrollView(
                 slivers: [
                   (FeedsBloc.get(context).currentTab == 0)

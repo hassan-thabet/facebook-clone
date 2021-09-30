@@ -12,12 +12,25 @@ class FeedsBloc extends Cubit<FeedStates> {
   List<PostModel> posts = [];
 
   int currentTab = 0;
+
   void onTabChange(index) {
     currentTab = index;
     emit(ChangeTabBarIndex());
     if (index == 0) {
       getPosts();
     }
+  }
+
+  void getMorePosts() {
+    emit((GetPostsLoading()));
+    FirebaseFirestore.instance.collection('posts').get().then((value) {
+      value.docs.forEach((element) {
+        posts.add(PostModel.fromJson(element.data()));
+      });
+      emit((GetPostsDone()));
+    }).catchError((error) {
+      emit((GetPostsError()));
+    });
   }
 
   Future getPosts() async {
