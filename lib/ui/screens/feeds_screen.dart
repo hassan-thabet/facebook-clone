@@ -39,8 +39,7 @@ class _FeedsScreenState extends State<FeedsScreen> {
         body: (kIsWeb)
             ? FeedsDesktopScreen(
                 trackingScrollController: trackingScrollController)
-            : FeedsMobileScreen(
-                trackingScrollController: trackingScrollController),
+            : FeedsMobileScreen(),
       ),
     );
   }
