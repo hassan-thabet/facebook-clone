@@ -37,8 +37,10 @@ class _FeedsScreenState extends State<FeedsScreen> {
     return GestureDetector(
       child: Scaffold(
         body: (kIsWeb)
-            ? FeedsDesktopScreen(scrollController: trackingScrollController)
-            : FeedsMobileScreen(scrollController: trackingScrollController),
+            ? FeedsDesktopScreen(
+                trackingScrollController: trackingScrollController)
+            : FeedsMobileScreen(
+                trackingScrollController: trackingScrollController),
       ),
     );
   }

@@ -11,17 +11,20 @@ import 'package:test_app/ui/components/stories_section.dart';
 import 'package:test_app/ui/screens/feeds_screen.dart';
 
 class FeedsMobileScreen extends StatelessWidget {
-  final TrackingScrollController scrollController;
+
+  final TrackingScrollController trackingScrollController;
 
   const FeedsMobileScreen({
     Key? key,
-    required this.scrollController,
+    required this.trackingScrollController,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => FeedsBloc()..getPosts(),
+      create: (BuildContext context) => FeedsBloc()
+        ..getPosts()
+        ..scrollListener(),
       child: Scaffold(
         body: DefaultTabController(
             length: 5,
@@ -92,8 +95,9 @@ class FeedsMobileScreen extends StatelessWidget {
             }, body:
             BlocBuilder<FeedsBloc, FeedStates>(builder: (context, state) {
               return CustomScrollView(
+                controller: context.read<FeedsBloc>().scrollController,
                 slivers: [
-                  (FeedsBloc.get(context).currentTab == 0)
+                  (context.read<FeedsBloc>().currentTab == 0)
                       ? SliverToBoxAdapter(
                           child: Container(
                             padding: EdgeInsets.symmetric(
@@ -103,14 +107,14 @@ class FeedsMobileScreen extends StatelessWidget {
                               children: [
                                 NewPostSection(),
                                 SizedBox(
-                                  height: 10,
-                                ),
-                                StoriesSection(
-                                    currentUser: currentUser, stories: stories),
-                                SizedBox(height: 15),
-                                (state is GetPostsDone)
-                                    ? ListView.separated(
-                                        shrinkWrap: true,
+                            height: 10,
+                          ),
+                          StoriesSection(
+                              currentUser: currentUser, stories: stories),
+                          SizedBox(height: 15),
+                          (state is GetPostsDone)
+                              ? ListView.separated(
+                            shrinkWrap: true,
                                         physics: NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) =>
                                             PostCard(
@@ -120,14 +124,31 @@ class FeedsMobileScreen extends StatelessWidget {
                                         ),
                                         separatorBuilder: (context, index) =>
                                             SizedBox(height: 8),
-                                        itemCount:
-                                            FeedsBloc.get(context).posts.length,
+                                        itemCount: context
+                                            .read<FeedsBloc>()
+                                            .posts
+                                            .length,
                                       )
-                                    : CircularProgressIndicator(),
+                                    : Container(),
+                                (context.read<FeedsBloc>().morePostsAvailable ==
+                                        false)
+                                    ? Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12),
+                                        child: Text(
+                                          'no more posts',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12),
+                                        child: CircularProgressIndicator(),
+                                      ),
                               ],
-                            ),
-                          ),
-                        )
+                      ),
+                    ),
+                  )
                       : SliverToBoxAdapter(),
                 ],
               );

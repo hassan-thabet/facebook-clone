@@ -15,11 +15,11 @@ import 'package:test_app/ui/components/web_options_section.dart';
 import 'feeds_screen.dart';
 
 class FeedsDesktopScreen extends StatelessWidget {
-  final TrackingScrollController scrollController;
+  final TrackingScrollController trackingScrollController;
 
   const FeedsDesktopScreen({
     Key? key,
-    required this.scrollController,
+    required this.trackingScrollController,
   }) : super(key: key);
 
   @override
@@ -149,10 +149,10 @@ class FeedsDesktopScreen extends StatelessWidget {
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) => PostCard(
-                                  post: FeedsBloc.get(context).posts[index]),
+                                  post: context.read<FeedsBloc>().posts[index]),
                               separatorBuilder: (context, index) =>
                                   SizedBox(height: 8),
-                              itemCount: FeedsBloc.get(context).posts.length,
+                              itemCount: context.read<FeedsBloc>().posts.length,
                             ),
                           ),
                         );

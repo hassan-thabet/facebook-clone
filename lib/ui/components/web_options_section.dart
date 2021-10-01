@@ -16,8 +16,6 @@ class OptionsListView extends StatelessWidget {
             Option(currentUser : false ,title: 'Watch', iconData: 'assets/icons/facebook.png'),
             Option(currentUser : false ,title: 'Groups', iconData: 'icons/groups.png'),
             Option(currentUser : false ,title: 'See More', iconData: 'icons/arrow-down-sign-to-navigate.png'),
-
-
             Option(currentUser : false ,title: 'Friends', iconData: 'assets/icons/group.png'),
             Option(currentUser : false ,title: 'Saved', iconData: 'assets/icons/bookmark.png'),
             Option(currentUser : false ,title: 'Marketplace', iconData: 'assets/icons/store.png'),
