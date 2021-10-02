@@ -60,7 +60,6 @@ class FeedsBloc extends Cubit<FeedStates> {
       emit((GetPostsDone()));
     });
   }
-
   void loadMorePosts() {
     FirebaseFirestore.instance
         .collection('posts')
