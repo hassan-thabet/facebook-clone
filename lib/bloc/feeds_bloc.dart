@@ -13,7 +13,6 @@ class FeedsBloc extends Cubit<FeedStates> {
   List<PostModel> posts = [];
   int currentTab = 0;
 
-  bool loadingMorePosts = false;
   bool morePostsAvailable = true;
   int limit = 2;
   DocumentSnapshot? lastPost;
@@ -22,8 +21,8 @@ class FeedsBloc extends Cubit<FeedStates> {
     scrollController.addListener(() {
       double maxScroll = scrollController.position.maxScrollExtent;
       double currentScroll = scrollController.position.pixels;
-      if (maxScroll == currentScroll && morePostsAvailable == true) {
-        print('scrolled');
+      if (currentScroll == maxScroll && morePostsAvailable == true) {
+        print('load more data ');
         getPosts();
       }
     });
@@ -42,37 +41,41 @@ class FeedsBloc extends Cubit<FeedStates> {
 
   Future getPosts() async {
     Future.delayed(Duration(seconds: 2), () {
-      if (lastPost == null) {
-        emit((GetPostsLoading()));
-        posts = [];
-        FirebaseFirestore.instance
-            .collection('posts')
-            .limit(limit)
-            .get()
-            .then((value) {
-          value.docs.forEach((element) {
-            posts.add(PostModel.fromJson(element.data()));
-          });
-          lastPost = value.docs.last;
-          emit((GetPostsDone()));
-        });
-      } else {
-        FirebaseFirestore.instance
-            .collection('posts')
-            .startAfterDocument(lastPost!)
-            .limit(limit)
-            .get()
-            .then((value) {
-          value.docs.forEach((element) {
-            posts.add(PostModel.fromJson(element.data()));
-          });
-          lastPost = value.docs.last;
-          if (value.docs.length < limit) {
-            morePostsAvailable = false;
-          }
-          emit((GetPostsDone()));
-        });
+      (lastPost == null) ? getPostsFirstTime() : loadMorePosts();
+    });
+  }
+
+  void getPostsFirstTime() {
+    emit((GetPostsLoading()));
+    posts = [];
+    FirebaseFirestore.instance
+        .collection('posts')
+        .limit(limit)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        posts.add(PostModel.fromJson(element.data()));
+      });
+      lastPost = value.docs.last;
+      emit((GetPostsDone()));
+    });
+  }
+
+  void loadMorePosts() {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .startAfterDocument(lastPost!)
+        .limit(limit)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        posts.add(PostModel.fromJson(element.data()));
+      });
+      lastPost = value.docs.last;
+      if (value.docs.length < limit) {
+        morePostsAvailable = false;
       }
+      emit((GetPostsDone()));
     });
   }
 }

@@ -20,7 +20,9 @@ class FeedsMobileScreen extends StatelessWidget {
       child: DefaultTabController(
         length: 5,
         child: Scaffold(
-          body: NestedScrollView(
+            body: BlocBuilder<FeedsBloc, FeedStates>(builder: (context, state) {
+          return NestedScrollView(
+              controller: context.read<FeedsBloc>().scrollController,
               floatHeaderSlivers: true,
               headerSliverBuilder:
                   (BuildContext context, bool innerBoxIsScrolled) => [
@@ -28,7 +30,6 @@ class FeedsMobileScreen extends StatelessWidget {
                           backgroundColor: Colors.white,
                           centerTitle: false,
                           floating: true,
-                          snap: true,
                           pinned: true,
                           title: Text(
                             'facebook',
@@ -78,7 +79,6 @@ class FeedsMobileScreen extends StatelessWidget {
               body:
                   BlocBuilder<FeedsBloc, FeedStates>(builder: (context, state) {
                 return CustomScrollView(
-                  controller: context.read<FeedsBloc>().scrollController,
                   slivers: [
                     (context.read<FeedsBloc>().currentTab == 0)
                         ? SliverToBoxAdapter(
@@ -115,7 +115,7 @@ class FeedsMobileScreen extends StatelessWidget {
                                               .length,
                                         )
                                       : Container(),
-                                  (context
+                                        (context
                                               .read<FeedsBloc>()
                                               .morePostsAvailable ==
                                           false)
@@ -139,8 +139,8 @@ class FeedsMobileScreen extends StatelessWidget {
                         : SliverToBoxAdapter(),
                   ],
                 );
-              })),
-        ),
+              }));
+        })),
       ),
     );
   }

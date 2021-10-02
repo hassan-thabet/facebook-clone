@@ -24,22 +24,12 @@ class FeedsScreen extends StatefulWidget {
 }
 
 class _FeedsScreenState extends State<FeedsScreen> {
-  final TrackingScrollController trackingScrollController =
-      TrackingScrollController();
-
-  void dispose() {
-    trackingScrollController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Scaffold(
-        body: (kIsWeb)
-            ? FeedsDesktopScreen(
-                trackingScrollController: trackingScrollController)
-            : FeedsMobileScreen(),
+        body: (kIsWeb) ? FeedsDesktopScreen() : FeedsMobileScreen(),
       ),
     );
   }

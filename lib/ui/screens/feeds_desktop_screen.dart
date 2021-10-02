@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,18 +16,13 @@ import 'package:test_app/ui/components/web_options_section.dart';
 import 'feeds_screen.dart';
 
 class FeedsDesktopScreen extends StatelessWidget {
-  final TrackingScrollController trackingScrollController;
-
-  const FeedsDesktopScreen({
-    Key? key,
-    required this.trackingScrollController,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return BlocProvider(
-      create: (BuildContext context) => FeedsBloc()..getPosts(),
+      create: (BuildContext context) => FeedsBloc()
+        ..getPosts()
+        ..scrollListener(),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -57,7 +53,7 @@ class FeedsDesktopScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     backgroundImage:
-                        AssetImage('assets/images/current_user.png'),
+                    AssetImage('assets/images/current_user.png'),
                   ),
                   SizedBox(
                     width: 4,
@@ -125,39 +121,62 @@ class FeedsDesktopScreen extends StatelessWidget {
             Expanded(
                 flex: 4,
                 child: Container(
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        sliver: SliverToBoxAdapter(
-                          child: StoriesSection(
-                              currentUser: currentUser, stories: stories),
-                        ),
-                      ),
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        sliver: SliverToBoxAdapter(
-                          child: NewPostSection(),
-                        ),
-                      ),
-                      BlocBuilder<FeedsBloc, FeedStates>(
-                          builder: (context, state) {
-                        return SliverPadding(
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          sliver: SliverToBoxAdapter(
-                            child: ListView.separated(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) => PostCard(
-                                  post: context.read<FeedsBloc>().posts[index]),
-                              separatorBuilder: (context, index) =>
-                                  SizedBox(height: 8),
-                              itemCount: context.read<FeedsBloc>().posts.length,
+                  child: BlocBuilder<FeedsBloc, FeedStates>(
+                    builder: (context, state) {
+                      return CustomScrollView(
+                        controller: context.read<FeedsBloc>().scrollController,
+                        slivers: [
+                          SliverPadding(
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            sliver: SliverToBoxAdapter(
+                              child: StoriesSection(
+                                  currentUser: currentUser, stories: stories),
                             ),
                           ),
-                        );
-                      }),
-                    ],
+                          SliverPadding(
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            sliver: SliverToBoxAdapter(
+                              child: NewPostSection(),
+                            ),
+                          ),
+                          SliverPadding(
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            sliver: SliverToBoxAdapter(
+                              child: ListView.separated(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) => PostCard(
+                                    post:
+                                        context.read<FeedsBloc>().posts[index]),
+                                separatorBuilder: (context, index) =>
+                                    SizedBox(height: 8),
+                                itemCount:
+                                    context.read<FeedsBloc>().posts.length,
+                              ),
+                            ),
+                          ),
+                          SliverPadding(
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            sliver: SliverToBoxAdapter(
+                              child: (context
+                                          .read<FeedsBloc>()
+                                          .morePostsAvailable ==
+                                      false)
+                                  ? Center(
+                                      child: Text(
+                                        'no more posts',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    )
+                                  : Transform.scale(
+                                      scale: 0.2,
+                                      child: LinearProgressIndicator(),
+                                    ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 )),
             Flexible(
